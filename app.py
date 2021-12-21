@@ -17,13 +17,18 @@ ORGANIZATION:
     REVISION: ---
 
 ==============================================================================="""
-from flask import Flask
+from flask import Flask, request
+import json
+
 app = Flask(__name__)
 
 
-@app.route('/')
+@app.route('/',methods=["POST"])
 def hello_world():
-    return 'Hello, World!'
+    print(request.data,flush=True)
+    obj = json.loads(request.data.decode())
+    print(obj.keys())
+    return json.dumps(obj)
 
 
 if __name__ == "__main__":
