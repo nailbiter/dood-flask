@@ -27,9 +27,7 @@ app = Flask(__name__)
 
 @app.route('/', methods=["POST"])
 def hello_world():
-    #    print(request.data,flush=True)
     obj = json.loads(request.data.decode())
-#    print(obj.keys())
     ec, out = subprocess.getstatusoutput(Template("""
     docker run {{image}} {{cmd}}
     """).render({
