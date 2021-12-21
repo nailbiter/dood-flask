@@ -19,16 +19,26 @@ ORGANIZATION:
 ==============================================================================="""
 from flask import Flask, request
 import json
+import subprocess
+from jinja2 import Template
 
 app = Flask(__name__)
 
 
-@app.route('/',methods=["POST"])
+@app.route('/', methods=["POST"])
 def hello_world():
-    print(request.data,flush=True)
+    #    print(request.data,flush=True)
     obj = json.loads(request.data.decode())
-    print(obj.keys())
-    return json.dumps(obj)
+#    print(obj.keys())
+    ec, out = subprocess.getstatusoutput(Template("""
+    docker run {{image}} {{cmd}}
+    """).render({
+        **obj
+    }).strip())
+    if ec == 0:
+        return out
+    else:
+        return Template("""bad ec: {{ec}}, out: {{out}}""").render({"ec": ec, "out": out})
 
 
 if __name__ == "__main__":
