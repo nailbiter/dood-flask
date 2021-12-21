@@ -6,7 +6,5 @@ services:
       dockerfile: Dockerfile.flask  
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      #ports:
-      #- "5000:5000"
   busybox:
     image: "yauritux/busybox-curl"
