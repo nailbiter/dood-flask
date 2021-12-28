@@ -28,15 +28,13 @@ app = Flask(__name__)
 @app.route('/', methods=["POST"])
 def hello_world():
     obj = json.loads(request.data.decode())
-    ec, out = subprocess.getstatusoutput(Template("""
+    res = {}
+    res["error_code"], res["output"] = subprocess.getstatusoutput(Template("""
     docker run {{image}} {{cmd}}
     """).render({
         **obj
     }).strip())
-    if ec == 0:
-        return out
-    else:
-        return Template("""bad ec: {{ec}}, out: {{out}}""").render({"ec": ec, "out": out})
+    return json.dumps(res)
 
 
 if __name__ == "__main__":
